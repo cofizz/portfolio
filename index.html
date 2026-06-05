@@ -541,11 +541,11 @@
           <div class="card-halftone"></div>
           <div class="card-label">Mićina domaća kujna</div>
         </a>
-        <a class="gallery-card rot-p2" href="https://filipterzic6423.github.io/WP2/" target="_blank" rel="noopener">
-          <img src="ReadMore.jpg" alt="ReadMore Bookstore" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#F43F5E 0%,#2d0a12 68%,#060609 100%)'"/>
+        <a class="gallery-card rot-p2" href="#" target="_blank" rel="noopener">
+          <img src="Calo.jpg" alt="Calo" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#06B6D4 0%,#071520 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
-          <div class="card-label">ReadMore Bookstore</div>
+          <div class="card-label">Calo</div>
         </a>
         <a class="gallery-card rot-p2" href="https://strong-sprite-e92dd3.netlify.app/" target="_blank" rel="noopener">
           <img src="Drale.jpg" alt="Drale" draggable="false"
@@ -567,11 +567,11 @@
           <div class="card-halftone"></div>
           <div class="card-label">Mićina domaća kujna</div>
         </a>
-        <a class="gallery-card rot-p3" href="https://filipterzic6423.github.io/WP2/" target="_blank" rel="noopener">
-          <img src="ReadMore.jpg" alt="ReadMore Bookstore" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#F43F5E 0%,#2d0a12 68%,#060609 100%)'"/>
+        <a class="gallery-card rot-p3" href="#" target="_blank" rel="noopener">
+          <img src="Calo.jpg" alt="Calo" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#06B6D4 0%,#071520 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
-          <div class="card-label">ReadMore Bookstore</div>
+          <div class="card-label">Calo</div>
         </a>
       </div>
 
@@ -591,7 +591,7 @@
         </div>
       </div>
       <div class="folder-name">Projects</div>
-      <div class="folder-sub">4 items</div>
+      <div class="folder-sub">5 items</div>
       <div class="folder-hint">click to open</div>
     </div>
   </div>
@@ -628,7 +628,7 @@
       <span class="os-tc yel"></span>
       <span class="os-tc grn"></span>
     </div>
-    <div class="os-title-text" id="os-title-text">Projects · 4 items</div>
+    <div class="os-title-text" id="os-title-text">Projects · 5 items</div>
   </div>
   <div class="os-body">
     <div class="os-files" id="os-files">
@@ -662,6 +662,14 @@
                onerror="this.parentElement.style.background='#071020'"/>
         </div>
         <div class="os-fname">Drale</div>
+      </div>
+
+      <div class="os-file" data-idx="4">
+        <div class="os-file-thumb">
+          <img src="Calo.jpg" alt="Calo" draggable="false"
+               onerror="this.parentElement.style.background='#071520'"/>
+        </div>
+        <div class="os-fname">Calo</div>
       </div>
 
     </div>
@@ -974,6 +982,12 @@ const PROJECTS = [
     desc:'Landing page for a running trainer — clean layout, strong visual hierarchy, fully responsive. Built with React and Tailwind, bundled with Vite.',
     tech:'React · JavaScript · Tailwind CSS · Vite',
     url:'https://strong-sprite-e92dd3.netlify.app/', cta:'View Live', img:'Drale.jpg' },
+  { accent:'#06B6D4',
+    title:'Calo',
+    meta:'2026 · Personal project · Calorie & macro tracker',
+    desc:'Full-stack calorie & macro tracker with a 240-food database, natural-language meal search in English and Serbian, Mifflin–St Jeor goal calculator, streaks, weekly charts, friend system, and a global steps leaderboard with a phone-sensor pedometer. When you fall short of your goal, pictures of my dog pop up to motivate you.',
+    tech:'Next.js 16 · React 19 · TypeScript · Tailwind v4 · Prisma · PostgreSQL · JWT · Vercel',
+    url:'https://calo-three.vercel.app/login', cta:'View Project', img:'Calo.jpg' },
 ];
 
 let activeIdx = -1;
@@ -992,7 +1006,7 @@ function closeDetail() {
   document.querySelectorAll('.os-file').forEach(f => f.classList.remove('active'));
   osDetailEl.classList.remove('visible');
   osFilesEl.classList.remove('narrow');
-  osTitleEl.textContent = 'Projects · 4 items';
+  osTitleEl.textContent = 'Projects · 5 items';
 }
 
 function closeWindow() {
