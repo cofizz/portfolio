@@ -340,9 +340,11 @@
     .os-files {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 6px; padding: 20px; flex: 0 0 100%;
-      align-content: start; overflow: hidden;
+      align-content: start; overflow-y: auto; overflow-x: hidden;
+      scrollbar-width: none;
       transition: flex-basis .4s cubic-bezier(.16,1,.3,1); min-width: 0;
     }
+    .os-files::-webkit-scrollbar { display: none; }
     .os-files.narrow { flex-basis: 44%; grid-template-columns: repeat(2, 1fr); }
 
     .os-file {
