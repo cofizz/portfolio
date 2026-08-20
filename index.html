@@ -401,6 +401,17 @@
       transition: gap .2s, border-color .2s;
     }
     .od-cta:hover { gap: 10px; border-color: rgba(232,232,236,.5); }
+    .od-status {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 9.5px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid; border-radius: 999px;
+      padding: 5px 12px; width: fit-content; margin-top: 6px;
+    }
+    .od-status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor; box-shadow: 0 0 7px currentColor;
+    }
 
     /* Contact CTA */
     .s2-contact {
@@ -605,7 +616,7 @@
         </div>
       </div>
       <div class="folder-name">Projects</div>
-      <div class="folder-sub">7 items</div>
+      <div class="folder-sub">13 items</div>
       <div class="folder-hint">click to open</div>
     </div>
   </div>
@@ -642,7 +653,7 @@
       <span class="os-tc yel"></span>
       <span class="os-tc grn"></span>
     </div>
-    <div class="os-title-text" id="os-title-text">Projects · 7 items</div>
+    <div class="os-title-text" id="os-title-text">Projects · 13 items</div>
   </div>
   <div class="os-body">
     <div class="os-files" id="os-files">
@@ -700,6 +711,54 @@
                onerror="this.parentElement.style.background='#241010'"/>
         </div>
         <div class="os-fname">Pilates Shop</div>
+      </div>
+
+      <div class="os-file" data-idx="7">
+        <div class="os-file-thumb">
+          <img src="OBD.jpg" alt="OBD Diagnostics" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#84CC16 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">OBD</div>
+      </div>
+
+      <div class="os-file" data-idx="8">
+        <div class="os-file-thumb">
+          <img src="burgr.jpg" alt="burgr" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#F59E0B 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">burgr</div>
+      </div>
+
+      <div class="os-file" data-idx="9">
+        <div class="os-file-thumb">
+          <img src="CarApp.jpg" alt="CarApp" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#EF4444 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">CarApp</div>
+      </div>
+
+      <div class="os-file" data-idx="10">
+        <div class="os-file-thumb">
+          <img src="ReceptApp.jpg" alt="ReceptApp" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#16A34A 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">ReceptApp</div>
+      </div>
+
+      <div class="os-file" data-idx="11">
+        <div class="os-file-thumb">
+          <img src="igica.jpg" alt="igica" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#A855F7 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">igica</div>
+      </div>
+
+      <div class="os-file" data-idx="12">
+        <div class="os-file-thumb">
+          <img src="ElektronikaArduino.jpg" alt="Elektronika · Arduino" draggable="false"
+               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#14B8A6 0%,#0b0b12 72%)'"/>
+        </div>
+        <div class="os-fname">Elektronika</div>
       </div>
 
     </div>
@@ -1030,6 +1089,36 @@ const PROJECTS = [
     desc:'Landing & catalog site for a premium Pilates reformer retailer in Novi Beograd. Cinematic hero, product showcase, brand story, and direct WhatsApp/Instagram enquiry. Bilingual SR/EN toggle, fully responsive.',
     tech:'HTML · CSS · JavaScript',
     url:'https://cofizz.github.io/rile2026/', cta:'View Live', img:'Pilates.jpg' },
+  { accent:'#84CC16',
+    title:'OBD Diagnostics',
+    meta:'2026 · Personal project · Car diagnostics',
+    desc:'OBD-II diagnostics tool that reads live engine data and fault codes straight from the car. Currently runs locally against one specific vehicle.',
+    status:'Local build', img:'OBD.jpg' },
+  { accent:'#F59E0B',
+    title:'burgr',
+    meta:'2026 · Concept · Burger festival',
+    desc:'Concept site for a burger festival — a self-initiated design exploration, not an official commission. Bold, appetite-first identity and event layout.',
+    status:'Concept', img:'burgr.jpg' },
+  { accent:'#EF4444',
+    title:'CarApp',
+    meta:'2026 · In development · Social app for cars',
+    desc:'A social network for car people: build and upgrade your garage, track power and mods, run 0–100 times, ride with friends on a live recorded map, and post updates — everything car enthusiasts need in one place.',
+    status:'In development', img:'CarApp.jpg' },
+  { accent:'#16A34A',
+    title:'ReceptApp',
+    meta:'2026 · In development · Recipes app',
+    desc:'Interactive recipe app with a huge, searchable library of recipes. Design is done; the build is in progress.',
+    status:'In development', img:'ReceptApp.jpg' },
+  { accent:'#A855F7',
+    title:'igica',
+    meta:'2026 · In development · Game',
+    desc:'A game in the making — still early in development.',
+    status:'In development', img:'igica.jpg' },
+  { accent:'#14B8A6',
+    title:'Elektronika · Arduino',
+    meta:'2026 · In development · Learn electronics',
+    desc:'Web app for learning Arduino and electronics through guided, hands-on exercises: wire up circuits in the app, then order the same real components to build them for real once you finish.',
+    status:'In development', img:'ElektronikaArduino.jpg' },
 ];
 
 let activeIdx = -1;
@@ -1048,7 +1137,7 @@ function closeDetail() {
   document.querySelectorAll('.os-file').forEach(f => f.classList.remove('active'));
   osDetailEl.classList.remove('visible');
   osFilesEl.classList.remove('narrow');
-  osTitleEl.textContent = 'Projects · 7 items';
+  osTitleEl.textContent = 'Projects · 13 items';
 }
 
 function closeWindow() {
@@ -1067,13 +1156,21 @@ function openDetail(idx) {
   document.querySelectorAll('.os-file').forEach((f,i) => f.classList.toggle('active', i===idx));
   osTitleEl.textContent = p.title;
 
-  odPreviewEl.innerHTML = `<img src="${p.img}" alt="${p.title}" draggable="false"/>`;
+  const grad = `radial-gradient(ellipse at 35% 30%, ${p.accent} 0%, #0b0b12 68%, #08080c 100%)`;
+  odPreviewEl.innerHTML = p.img
+    ? `<img src="${p.img}" alt="${p.title}" draggable="false" onerror="this.style.display='none';this.parentElement.style.background='${grad}'"/>`
+    : `<div class="od-grad" style="background:${grad}"></div>`;
+
+  const techLine = p.tech ? `<div class="od-tech" style="color:${p.accent}">${p.tech}</div>` : '';
+  const action = p.url
+    ? `<a href="${p.url}" target="_blank" rel="noopener" class="od-cta">${p.cta} ↷</a>`
+    : `<span class="od-status" style="border-color:${p.accent}55;color:${p.accent}">${p.status || 'In development'}</span>`;
   odInfoEl.innerHTML = `
     <div class="od-title">${p.title}</div>
     <div class="od-meta">${p.meta}</div>
     <div class="od-desc">${p.desc}</div>
-    <div class="od-tech" style="color:${p.accent}">${p.tech}</div>
-    <a href="${p.url}" target="_blank" rel="noopener" class="od-cta">${p.cta} ↷</a>
+    ${techLine}
+    ${action}
   `;
 
   osFilesEl.classList.add('narrow');
