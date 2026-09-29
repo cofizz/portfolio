@@ -323,8 +323,16 @@
     }
     .os-traffic { display: flex; gap: 7px; margin-right: 14px; }
     .os-tc {
-      width: 12px; height: 12px; border-radius: 50%;
+      width: 12px; height: 12px; border-radius: 50%; border: 0; padding: 0;
       flex-shrink: 0; cursor: pointer; transition: filter .15s;
+    }
+    .os-tc.red { position: relative; }
+    .os-tc.red::after { content: ''; position: absolute; inset: -10px; } /* bigger tap target */
+    .os-back {
+      display: none; align-items: center;
+      background: none; border: 0; padding: 8px 10px 8px 0; margin-right: 6px;
+      font: inherit; font-size: 12px; font-weight: 600; color: var(--txt); cursor: pointer;
+      white-space: nowrap;
     }
     .os-tc:hover { filter: brightness(1.25); }
     .os-tc.red { background:#FF5F57; box-shadow:0 0 5px rgba(255,95,87,.5); }
@@ -332,7 +340,8 @@
     .os-tc.grn { background:#28C840; box-shadow:0 0 5px rgba(40,200,64,.3); }
     .os-title-text {
       font-size: 12px; font-weight: 500; color: rgba(232,232,236,.42);
-      flex: 1; text-align: center; margin-right: 70px;
+      flex: 1; min-width: 0; text-align: center; margin-right: 70px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
     .os-body { display: flex; flex: 1; min-height: 0; overflow: hidden; }
@@ -341,32 +350,40 @@
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 6px; padding: 20px; flex: 0 0 100%;
       align-content: start; overflow-y: auto; overflow-x: hidden;
-      scrollbar-width: none;
+      overscroll-behavior: contain; scrollbar-width: none;
       transition: flex-basis .4s cubic-bezier(.16,1,.3,1); min-width: 0;
     }
     .os-files::-webkit-scrollbar { display: none; }
     .os-files.narrow { flex-basis: 44%; grid-template-columns: repeat(2, 1fr); }
 
     .os-file {
-      display: flex; flex-direction: column; align-items: center;
+      display: flex; flex-direction: column; align-items: center; min-width: 0;
       gap: 10px; padding: 16px 12px; border-radius: 12px; cursor: pointer;
-      border: 1px solid transparent;
+      border: 1px solid transparent; background: transparent;
+      font: inherit; color: inherit; -webkit-tap-highlight-color: transparent;
       transition: background .2s, border-color .2s;
     }
-    .os-file:hover { background: rgba(255,255,255,.06); }
-    .os-file.active { background: rgba(124,95,233,.12); border-color: rgba(124,95,233,.3); }
+    @media (hover: hover) { .os-file:hover { background: rgba(255,255,255,.06); } }
+    /* --acc is set per file from the project's accent */
+    .os-file.active {
+      background: color-mix(in srgb, var(--acc) 14%, transparent);
+      border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+    }
 
     .os-file-thumb {
-      width: 120px; height: 90px; border-radius: 10px; overflow: hidden;
+      display: block; width: 100%; max-width: 120px; aspect-ratio: 4/3;
+      border-radius: 10px; overflow: hidden;
       border: 1px solid rgba(255,255,255,.09); flex-shrink: 0;
     }
     .os-file-thumb img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: top center; display: block;
     }
+    /* phone:true projects — show the whole portrait screenshot on the accent gradient */
+    .os-file-thumb.phone img { object-fit: contain; object-position: center; padding: 5px 0; }
     .os-fname {
-      font-size: 11px; font-weight: 500; color: var(--dim);
-      text-align: center; max-width: 130px;
+      display: block; font-size: 11px; font-weight: 500; color: var(--dim);
+      text-align: center; max-width: 100%;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .os-file.active .os-fname { color: var(--txt); }
@@ -384,10 +401,15 @@
     .od-preview img {
       width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;
     }
-    .od-grad { width: 100%; height: 100%; }
+    .od-preview.phone { padding: 14px 0; }
+    .od-preview.phone img {
+      width: auto; max-width: 100%; margin: 0 auto; object-fit: contain;
+      border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.55);
+    }
     .od-info {
       flex: 1; padding: 16px 18px;
-      display: flex; flex-direction: column; gap: 6px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 6px;
+      overflow-y: auto; overscroll-behavior: contain;
     }
     .od-title { font-size: clamp(13px,1.5vw,18px); font-weight: 900; letter-spacing:-.4px; color:var(--txt); line-height:1.2; }
     .od-meta  { font-size: 10px; color: var(--dim); }
@@ -483,15 +505,32 @@
       /* OS Window */
       .os-window {
         width: min(96vw, 820px) !important;
-        height: 78vh !important;
+        height: 80vh !important; height: 80dvh !important;
         transform: translate(-50%,-50%) scale(0.88) !important;
       }
       .os-window.open { transform: translate(-50%,-50%) scale(1) !important; }
+      .os-titlebar { height: 46px; }
+      .os-tc { width: 13px; height: 13px; }
       .os-files { grid-template-columns: repeat(3,1fr); gap: 4px; padding: 12px; }
       .os-file { padding: 10px 4px; gap: 7px; }
-      .os-file-thumb { width: 72px; height: 54px; }
-      .os-fname { font-size: 9px; max-width: 78px; }
-      .os-title-text { font-size: 11px; margin-right: 50px; }
+      .os-fname { font-size: 10px; }
+      .os-title-text { font-size: 12px; margin-right: 50px; }
+
+      /* On phones a selected project takes over the whole window */
+      .os-window.detail-open .os-files { display: none; }
+      .os-window.detail-open .os-back { display: inline-flex; }
+      .os-window.detail-open .os-title-text { margin-right: 0; text-align: right; color: var(--txt); }
+      .os-window:not(.detail-open) .os-detail { display: none; }
+      .os-detail { border-left: none; }
+      .od-preview { flex: 0 0 auto; aspect-ratio: 16/10; max-height: 42%; }
+      .od-preview.phone { aspect-ratio: auto; flex-basis: 46%; max-height: none; }
+      .od-info { padding: 18px 18px 24px; gap: 8px; }
+      .od-title { font-size: 21px; }
+      .od-meta  { font-size: 11px; }
+      .od-desc  { font-size: 13.5px; line-height: 1.6; color: rgba(232,232,236,.62); }
+      .od-tech  { font-size: 10.5px; line-height: 1.7; }
+      .od-cta   { font-size: 14px; padding: 10px 0 4px; }
+      .od-status { font-size: 10.5px; padding: 7px 14px; }
 
       /* Contact */
       .contact-heading { font-size: clamp(26px, 9vw, 50px); letter-spacing: -2px; }
@@ -550,24 +589,24 @@
 
       <div class="gallery-col left-col" id="left-col">
         <a class="gallery-card rot-n4" href="https://micinakujna.vercel.app/" target="_blank" rel="noopener">
-          <img src="MicaPocetna.jpg" alt="Mićina domaća kujna" draggable="false"/>
+          <img src="MicaPocetna.jpg" alt="Mićina domaća kujna" draggable="false" loading="lazy" decoding="async"/>
           <div class="card-halftone"></div>
           <div class="card-label">Mićina domaća kujna</div>
         </a>
         <a class="gallery-card rot-p2" href="https://calo-three.vercel.app/login" target="_blank" rel="noopener">
-          <img src="Calo.jpg" alt="Calo" draggable="false"
+          <img src="Calo.jpg" alt="Calo" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#06B6D4 0%,#071520 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">Calo</div>
         </a>
         <a class="gallery-card rot-p2" href="https://strong-sprite-e92dd3.netlify.app/" target="_blank" rel="noopener">
-          <img src="Drale.jpg" alt="Drale" draggable="false"
+          <img src="Drale.jpg" alt="Drale" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#3B82F6 0%,#071020 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">Drale</div>
         </a>
         <a class="gallery-card rot-n3" href="https://cofizz.github.io/ReKickLab/" target="_blank" rel="noopener">
-          <img src="ReKickLab.jpg" alt="ReKick Lab" draggable="false"
+          <img src="ReKickLab.jpg" alt="ReKick Lab" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#2563EB 0%,#0a1024 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">ReKick Lab</div>
@@ -576,24 +615,24 @@
 
       <div class="gallery-col right-col" id="right-col">
         <a class="gallery-card rot-p4" href="https://strong-sprite-e92dd3.netlify.app/" target="_blank" rel="noopener">
-          <img src="Drale.jpg" alt="Drale" draggable="false"
+          <img src="Drale.jpg" alt="Drale" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#3B82F6 0%,#071020 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">Drale</div>
         </a>
         <a class="gallery-card rot-n2" href="https://micinakujna.vercel.app/" target="_blank" rel="noopener">
-          <img src="MicaPocetna.jpg" alt="Mićina domaća kujna" draggable="false"/>
+          <img src="MicaPocetna.jpg" alt="Mićina domaća kujna" draggable="false" loading="lazy" decoding="async"/>
           <div class="card-halftone"></div>
           <div class="card-label">Mićina domaća kujna</div>
         </a>
         <a class="gallery-card rot-p3" href="https://calo-three.vercel.app/login" target="_blank" rel="noopener">
-          <img src="Calo.jpg" alt="Calo" draggable="false"
+          <img src="Calo.jpg" alt="Calo" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#06B6D4 0%,#071520 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">Calo</div>
         </a>
         <a class="gallery-card rot-n3" href="https://cofizz.github.io/rile2026/" target="_blank" rel="noopener">
-          <img src="Pilates.jpg" alt="Pilates Reformer Shop" draggable="false"
+          <img src="Pilates.jpg" alt="Pilates Reformer Shop" draggable="false" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 35% 35%,#FF7A6B 0%,#241010 68%,#060609 100%)'"/>
           <div class="card-halftone"></div>
           <div class="card-label">Pilates Reformer Shop</div>
@@ -616,7 +655,7 @@
         </div>
       </div>
       <div class="folder-name">Projects</div>
-      <div class="folder-sub">13 items</div>
+      <div class="folder-sub" id="folder-sub">14 items</div>
       <div class="folder-hint">click to open</div>
     </div>
   </div>
@@ -649,119 +688,15 @@
 <div class="os-window" id="os-window">
   <div class="os-titlebar">
     <div class="os-traffic">
-      <span class="os-tc red" id="os-close"></span>
+      <button type="button" class="os-tc red" id="os-close" aria-label="Close"></button>
       <span class="os-tc yel"></span>
       <span class="os-tc grn"></span>
     </div>
-    <div class="os-title-text" id="os-title-text">Projects · 13 items</div>
+    <button type="button" class="os-back" id="os-back" aria-label="Back to projects">‹ Projects</button>
+    <div class="os-title-text" id="os-title-text">Projects · 14 items</div>
   </div>
   <div class="os-body">
-    <div class="os-files" id="os-files">
-
-      <div class="os-file" data-idx="0">
-        <div class="os-file-thumb">
-          <img src="MicaPocetna.jpg" alt="Mićina domaća kujna" draggable="false"/>
-        </div>
-        <div class="os-fname">Mićina kujna</div>
-      </div>
-
-      <div class="os-file" data-idx="1">
-        <div class="os-file-thumb">
-          <img src="ReadMore.jpg" alt="ReadMore Bookstore" draggable="false"
-               onerror="this.parentElement.style.background='#2d0a12'"/>
-        </div>
-        <div class="os-fname">ReadMore</div>
-      </div>
-
-      <div class="os-file" data-idx="2">
-        <div class="os-file-thumb">
-          <img src="borac.jpg" alt="MMA Club Borac" draggable="false"
-               onerror="this.parentElement.style.background='#2a0e00'"/>
-        </div>
-        <div class="os-fname">Borac</div>
-      </div>
-
-      <div class="os-file" data-idx="3">
-        <div class="os-file-thumb">
-          <img src="Drale.jpg" alt="Drale" draggable="false"
-               onerror="this.parentElement.style.background='#071020'"/>
-        </div>
-        <div class="os-fname">Drale</div>
-      </div>
-
-      <div class="os-file" data-idx="4">
-        <div class="os-file-thumb">
-          <img src="Calo.jpg" alt="Calo" draggable="false"
-               onerror="this.parentElement.style.background='#071520'"/>
-        </div>
-        <div class="os-fname">Calo</div>
-      </div>
-
-      <div class="os-file" data-idx="5">
-        <div class="os-file-thumb">
-          <img src="ReKickLab.jpg" alt="ReKick Lab" draggable="false"
-               onerror="this.parentElement.style.background='#0a1024'"/>
-        </div>
-        <div class="os-fname">ReKick Lab</div>
-      </div>
-
-      <div class="os-file" data-idx="6">
-        <div class="os-file-thumb">
-          <img src="Pilates.jpg" alt="Pilates Reformer Shop" draggable="false"
-               onerror="this.parentElement.style.background='#241010'"/>
-        </div>
-        <div class="os-fname">Pilates Shop</div>
-      </div>
-
-      <div class="os-file" data-idx="7">
-        <div class="os-file-thumb">
-          <img src="OBD.jpg" alt="OBD Diagnostics" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#84CC16 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">OBD</div>
-      </div>
-
-      <div class="os-file" data-idx="8">
-        <div class="os-file-thumb">
-          <img src="burgr.jpg" alt="burgr" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#F59E0B 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">burgr</div>
-      </div>
-
-      <div class="os-file" data-idx="9">
-        <div class="os-file-thumb">
-          <img src="Camber.jpg" alt="Camber" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#EF4444 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">Camber</div>
-      </div>
-
-      <div class="os-file" data-idx="10">
-        <div class="os-file-thumb">
-          <img src="ReceptApp.jpg" alt="ReceptApp" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#16A34A 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">ReceptApp</div>
-      </div>
-
-      <div class="os-file" data-idx="11">
-        <div class="os-file-thumb">
-          <img src="igica.jpg" alt="igica" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#A855F7 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">igica</div>
-      </div>
-
-      <div class="os-file" data-idx="12">
-        <div class="os-file-thumb">
-          <img src="Strujokaz.jpg" alt="Strujokaz" draggable="false"
-               onerror="this.style.display='none';this.parentElement.style.background='radial-gradient(ellipse at 40% 30%,#EAB308 0%,#0b0b12 72%)'"/>
-        </div>
-        <div class="os-fname">Strujokaz</div>
-      </div>
-
-    </div>
+    <div class="os-files" id="os-files"></div>
     <div class="os-detail" id="os-detail">
       <div class="od-preview" id="od-preview"></div>
       <div class="od-info" id="od-info"></div>
@@ -1046,37 +981,34 @@ const osTitleEl  = document.getElementById('os-title-text');
 const odPreviewEl= document.getElementById('od-preview');
 const odInfoEl   = document.getElementById('od-info');
 
+/* Folder contents, in display order.
+   short: label under the icon (defaults to title) · phone:true for portrait phone screenshots
+   url + cta for a live link, otherwise status is shown as a badge. */
 const PROJECTS = [
-  { accent:'#22C55E',
-    title:'Mićina domaća kujna',
-    meta:'2026 · Cold-pitch · Belgrade restaurant',
-    desc:'Editorial site for a 4.8★ Belgrade kitchen. Bilingual SR/EN, scroll-triggered storytelling, working email pipeline via Resend. Real cold pitch — deal didn\'t close because the owner is closing the restaurant.',
-    tech:'Next.js 16 · TypeScript · Tailwind v4 · Motion · Resend',
-    url:'https://micinakujna.vercel.app/', cta:'View Live', img:'MicaPocetna.jpg' },
-  { accent:'#F43F5E',
-    title:'ReadMore Bookstore',
-    meta:'2026 · School project · Online store',
-    desc:'Full-featured online bookstore · product catalog driven by JSON, XML data exchange, shopping cart with live item management. Built from scratch as a school project.',
-    tech:'HTML · CSS · JavaScript · JSON · XML',
-    url:'https://filipterzic6423.github.io/WP2/', cta:'View Live', img:'ReadMore.jpg' },
-  { accent:'#EA580C',
-    title:'MMA Club "Borac"',
-    meta:'2026 · School project · Club website',
-    desc:'Clean presentation website for a local MMA club. All about the look · sharp layout, strong typography, zero frameworks. Pure HTML, CSS and XML from scratch.',
-    tech:'HTML · CSS · XML',
-    url:'https://cofizz.github.io/webpraktikum/index.html', cta:'View Live', img:'borac.jpg' },
-  { accent:'#3B82F6',
-    title:'Drale',
-    meta:'2026 · Running trainer · Landing page',
-    desc:'Landing page for a running trainer — clean layout, strong visual hierarchy, fully responsive. Built with React and Tailwind, bundled with Vite.',
-    tech:'React · JavaScript · Tailwind CSS · Vite',
-    url:'https://strong-sprite-e92dd3.netlify.app/', cta:'View Live', img:'Drale.jpg' },
+  { accent:'#EF4444',
+    title:'Camber',
+    meta:'2026 · Live web app · Social platform for car builds',
+    desc:'A social platform for car enthusiasts — plan your build as a staged roadmap, project finished horsepower and torque over your baseline, track the true cost of parts and labour, and see your crew live on the map with their car and current speed. Web app live now; iOS & Android coming.',
+    tech:'Next.js 15 · React 19 · TypeScript · Prisma · PostgreSQL · NextAuth · Tailwind · Expo / React Native · Cloudflare R2 · Vercel',
+    url:'https://camber-app.com/', cta:'View Live', img:'camber2.jpg', phone:true },
+  { accent:'#EAB308',
+    title:'Strujokaz',
+    meta:'2026 · Live web app · Learn electronics',
+    desc:'Interactive web app for learning electronics and Arduino by doing — wire up real circuits on a virtual breadboard across guided levels (First Light, resistors, Arduino, Blink, buttons) with live feedback and hints. A “Real” mode lets you order the same components and build them for real once you finish in-app.',
+    tech:'React 19 · TypeScript · Vite · Vitest · Netlify',
+    url:'https://strujokaz.netlify.app/', cta:'View Live', img:'Strujokaz.jpg' },
   { accent:'#06B6D4',
     title:'Calo',
     meta:'2026 · Personal project · Calorie & macro tracker',
     desc:'Full-stack calorie & macro tracker with a 240-food database, natural-language meal search in English and Serbian, Mifflin–St Jeor goal calculator, streaks, weekly charts, friend system, and a global steps leaderboard with a phone-sensor pedometer. When you fall short of your goal, pictures of my dog pop up to motivate you.',
     tech:'Next.js 16 · React 19 · TypeScript · Tailwind v4 · Prisma · PostgreSQL · JWT · Vercel',
     url:'https://calo-three.vercel.app/login', cta:'View Project', img:'Calo.jpg' },
+  { accent:'#22C55E',
+    title:'Mićina domaća kujna', short:'Mićina kujna',
+    meta:'2026 · Cold-pitch · Belgrade restaurant',
+    desc:'Editorial site for a 4.8★ Belgrade kitchen. Bilingual SR/EN, scroll-triggered storytelling, working email pipeline via Resend. Real cold pitch — deal didn\'t close because the owner is closing the restaurant.',
+    tech:'Next.js 16 · TypeScript · Tailwind v4 · Motion · Resend',
+    url:'https://micinakujna.vercel.app/', cta:'View Live', img:'MicaPocetna.jpg' },
   { accent:'#2563EB',
     title:'ReKick Lab',
     meta:'2026 · Local business · Sneaker restoration',
@@ -1084,51 +1016,95 @@ const PROJECTS = [
     tech:'HTML · CSS · JavaScript',
     url:'https://cofizz.github.io/ReKickLab/', cta:'View Live', img:'ReKickLab.jpg' },
   { accent:'#FF7A6B',
-    title:'Pilates Reformer Shop',
+    title:'Pilates Reformer Shop', short:'Pilates Shop',
     meta:'2026 · Local business · Pilates equipment store',
     desc:'Landing & catalog site for a premium Pilates reformer retailer in Novi Beograd. Cinematic hero, product showcase, brand story, and direct WhatsApp/Instagram enquiry. Bilingual SR/EN toggle, fully responsive.',
     tech:'HTML · CSS · JavaScript',
     url:'https://cofizz.github.io/rile2026/', cta:'View Live', img:'Pilates.jpg' },
-  { accent:'#84CC16',
-    title:'OBD Diagnostics',
-    meta:'2026 · Personal project · Car diagnostics',
-    desc:'OBD-II diagnostics tool that reads live engine data and fault codes straight from the car. Currently runs locally against one specific vehicle.',
-    status:'Local build', img:'OBD.jpg' },
-  { accent:'#F59E0B',
-    title:'burgr',
-    meta:'2026 · Concept · Burger festival',
-    desc:'Concept site for a burger festival — a self-initiated design exploration, not an official commission. Bold, appetite-first identity and event layout.',
-    status:'Concept', img:'burgr.jpg' },
-  { accent:'#EF4444',
-    title:'Camber',
-    meta:'2026 · Live web app · Social platform for car builds',
-    desc:'A social platform for car enthusiasts — plan your build as a staged roadmap, project finished horsepower and torque over your baseline, track the true cost of parts and labour, and see your crew live on the map with their car and current speed. Web app live now; iOS & Android coming.',
-    url:'https://camber-app.com/', cta:'View Live', img:'Camber.jpg' },
-  { accent:'#16A34A',
-    title:'ReceptApp',
+  { accent:'#D4E157',
+    title:'Drale',
+    meta:'2026 · Landing page · Running trainer',
+    desc:'Landing page for a running trainer — clean layout, strong visual hierarchy, fully responsive. Built with React and Tailwind, bundled with Vite.',
+    tech:'React · JavaScript · Tailwind CSS · Vite',
+    url:'https://strong-sprite-e92dd3.netlify.app/', cta:'View Live', img:'Drale.jpg' },
+  { accent:'#F43F5E',
+    title:'ReadMore Bookstore', short:'ReadMore',
+    meta:'2026 · School project · Online store',
+    desc:'Full-featured online bookstore · product catalog driven by JSON, XML data exchange, shopping cart with live item management. Built from scratch as a school project.',
+    tech:'HTML · CSS · JavaScript · JSON · XML',
+    url:'https://filipterzic6423.github.io/WP2/', cta:'View Live', img:'ReadMore.jpg' },
+  { accent:'#EA580C',
+    title:'MMA Club "Borac"', short:'Borac',
+    meta:'2026 · School project · Club website',
+    desc:'Clean presentation website for a local MMA club. All about the look · sharp layout, strong typography, zero frameworks. Pure HTML, CSS and XML from scratch.',
+    tech:'HTML · CSS · XML',
+    url:'https://cofizz.github.io/webpraktikum/index.html', cta:'View Live', img:'borac.jpg' },
+  { accent:'#C77DFF',
+    title:'Guess the Ride',
+    meta:'2026 · Launching soon · Multiplayer car guessing game',
+    desc:'Name the car from a close-up clue. Ranked 1v1 matches over 5 rounds with your rating on the line, a ladder, player profiles, and daily challenges (four cars a day, no account needed). Sign in with Google, Discord or email. Self-hosted on a single Hetzner server with Postgres, with nightly encrypted backups to Cloudflare R2.',
+    tech:'Next.js 15 · React 19 · TypeScript · Postgres · Drizzle · Auth.js · Cloudflare R2 · Hetzner',
+    status:'Launching soon', img:'GuessTheRide.png' },
+  { accent:'#C8643C',
+    title:'Fornata',
     meta:'2026 · In development · Recipes app',
-    desc:'Interactive recipe app with a huge, searchable library of recipes. Design is done; the build is in progress.',
-    status:'In development', img:'ReceptApp.jpg' },
-  { accent:'#A855F7',
+    desc:'Cross-platform recipe app with a huge, searchable library of recipes — pick a category from the dish wheel or just search for what you want to cook. 5 languages, 6 switchable themes, and a personal cookbook for saving favourites. Runs on iOS, Android and the web.',
+    tech:'React Native · Expo · TypeScript · Reanimated · Claude API',
+    status:'In development', img:'fornata.png' },
+  { accent:'#EC4899',
     title:'igica',
     meta:'2026 · In development · Game',
     desc:'A game in the making — still early in development.',
-    status:'In development', img:'igica.jpg' },
-  { accent:'#EAB308',
-    title:'Strujokaz',
-    meta:'2026 · Live web app · Learn electronics',
-    desc:'Interactive web app for learning electronics and Arduino by doing — wire up real circuits on a virtual breadboard across guided levels (First Light, resistors, Arduino, Blink, buttons) with live feedback and hints. A “Real” mode lets you order the same components and build them for real once you finish in-app.',
-    url:'https://strujokaz.netlify.app/', cta:'View Live', img:'Strujokaz.jpg' },
+    status:'In development' },
+  { accent:'#4ADE80',
+    title:'OBD Diagnostics', short:'OBD',
+    meta:'2026 · Personal project · Car diagnostics',
+    desc:'In-car OBD-II dashboard that talks to the ECU through an ELM327 adapter over WiFi, Bluetooth or USB. Live boost, RPM, fuel trims, temps and timing on a phone browser, a rolling boost chart, CSV logging, fault codes, oil tracking and acceleration runs. One Python file with zero dependencies, because there\'s no internet in the car. Currently runs locally against one specific vehicle.',
+    tech:'Python (standard library only) · ELM327 / SAE J1979 · HTML · CSS · JavaScript · Canvas',
+    status:'Local build', img:'obd_ss.png' },
+  { accent:'#E11D2E',
+    title:'burgr',
+    meta:'2026 · Concept · Belgrade Burger Festival',
+    desc:'Concept site for the Belgrade Burger Festival at Kalemegdan — pitched to the organiser, who decided not to go with a website, so it stays a concept. Video hero, festival program, vendors, sponsors, gallery, press and FAQ, bilingual SR/EN with Serbian as the default.',
+    tech:'Next.js 16 · React 19 · TypeScript · Tailwind v4 · shadcn/ui · Motion · Zod',
+    status:'Concept', img:'burgr.jpg' },
 ];
+
+const osBack      = document.getElementById('os-back');
+const folderTitle = `Projects · ${PROJECTS.length} items`;
+document.getElementById('folder-sub').textContent = `${PROJECTS.length} items`;
+osTitleEl.textContent = folderTitle;
+
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const thumbGrad   = acc => `radial-gradient(ellipse at 40% 30%, ${acc} 0%, #0b0b12 72%)`;
+const previewGrad = acc => `radial-gradient(ellipse at 35% 30%, ${acc} 0%, #0b0b12 68%, #08080c 100%)`;
+
+/* Icons are built on first open, so no screenshots download until the folder is used */
+let filesBuilt = false;
+function buildFiles() {
+  if (filesBuilt) return;
+  filesBuilt = true;
+  osFilesEl.innerHTML = PROJECTS.map((p, i) => `
+    <button type="button" class="os-file" style="--acc:${p.accent}">
+      <span class="os-file-thumb${p.phone ? ' phone' : ''}" style="background:${thumbGrad(p.accent)}">
+        ${p.img ? `<img src="${esc(p.img)}" alt="" draggable="false" decoding="async" onerror="this.remove()"/>` : ''}
+      </span>
+      <span class="os-fname">${p.short || p.title}</span>
+    </button>`).join('');
+  osFilesEl.querySelectorAll('.os-file').forEach((file, i) => {
+    file.addEventListener('click', e => { e.stopPropagation(); openDetail(i); });
+  });
+}
 
 let activeIdx = -1;
 
 function openWindow() {
+  buildFiles();
   osBackdrop.classList.add('open');
   osWindow.classList.add('open');
   gsap.fromTo('.os-file',
     { opacity:0, y:14, scale:.9 },
-    { opacity:1, y:0, scale:1, duration:.35, stagger:.08, ease:'power3.out', delay:.1 }
+    { opacity:1, y:0, scale:1, duration:.35, stagger:.04, ease:'power3.out', delay:.1 }
   );
 }
 
@@ -1137,7 +1113,8 @@ function closeDetail() {
   document.querySelectorAll('.os-file').forEach(f => f.classList.remove('active'));
   osDetailEl.classList.remove('visible');
   osFilesEl.classList.remove('narrow');
-  osTitleEl.textContent = 'Projects · 13 items';
+  osWindow.classList.remove('detail-open');
+  osTitleEl.textContent = folderTitle;
 }
 
 function closeWindow() {
@@ -1156,10 +1133,11 @@ function openDetail(idx) {
   document.querySelectorAll('.os-file').forEach((f,i) => f.classList.toggle('active', i===idx));
   osTitleEl.textContent = p.title;
 
-  const grad = `radial-gradient(ellipse at 35% 30%, ${p.accent} 0%, #0b0b12 68%, #08080c 100%)`;
+  odPreviewEl.className = 'od-preview' + (p.phone ? ' phone' : '');
+  odPreviewEl.style.background = previewGrad(p.accent);
   odPreviewEl.innerHTML = p.img
-    ? `<img src="${p.img}" alt="${p.title}" draggable="false" onerror="this.style.display='none';this.parentElement.style.background='${grad}'"/>`
-    : `<div class="od-grad" style="background:${grad}"></div>`;
+    ? `<img src="${esc(p.img)}" alt="${esc(p.title)}" draggable="false" onerror="this.remove()"/>`
+    : '';
 
   const techLine = p.tech ? `<div class="od-tech" style="color:${p.accent}">${p.tech}</div>` : '';
   const action = p.url
@@ -1175,6 +1153,8 @@ function openDetail(idx) {
 
   osFilesEl.classList.add('narrow');
   osDetailEl.classList.add('visible');
+  osWindow.classList.add('detail-open');
+  odInfoEl.scrollTop = 0;
   gsap.fromTo(odInfoEl.children,
     { opacity:0, y:8 },
     { opacity:1, y:0, duration:.3, stagger:.06, ease:'power3.out', delay:.2 }
@@ -1184,9 +1164,7 @@ function openDetail(idx) {
 folderTrig.addEventListener('click', openWindow);
 osClose.addEventListener('click', closeWindow);
 osBackdrop.addEventListener('click', closeWindow);
-document.querySelectorAll('.os-file').forEach((file, i) => {
-  file.addEventListener('click', e => { e.stopPropagation(); openDetail(i); });
-});
+osBack.addEventListener('click', closeDetail);
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (activeIdx !== -1) closeDetail(); else closeWindow();
