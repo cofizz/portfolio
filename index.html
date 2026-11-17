@@ -240,16 +240,18 @@
     .rot-p2 { transform: rotate(2deg); }
     .rot-p3 { transform: rotate(3deg); }
     .rot-p4 { transform: rotate(4deg); }
-    .gallery-card:hover {
-      transform: rotate(0deg) scale(1.04) !important;
-      box-shadow: 0 36px 80px rgba(0,0,0,.75);
+    @media (hover: hover) {
+      .gallery-card:hover {
+        transform: rotate(0deg) scale(1.04) !important;
+        box-shadow: 0 36px 80px rgba(0,0,0,.75);
+      }
     }
     .gallery-card img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: top center; display: block;
       transition: transform .6s ease;
     }
-    .gallery-card:hover img { transform: scale(1.06); }
+    @media (hover: hover) { .gallery-card:hover img { transform: scale(1.06); } }
     .card-halftone {
       position: absolute; inset: 0; pointer-events: none;
       background-image: radial-gradient(circle, #000 1px, transparent 1px);
@@ -508,15 +510,23 @@
       .s1-bot { align-items: flex-end; }
       .scroll-hint { padding: 10px 18px; font-size: 10px; }
 
-      /* Gallery */
-      .gallery-cols { padding: 0 14px; gap: 12px; }
-      .gallery-col { gap: 18px; width: 44%; }
-      .gallery-card { max-width: 150px; border-radius: 12px; }
-      .card-label { font-size: 9px; padding: 28px 12px 12px; }
-      .left-col { padding-top: 4vh; padding-bottom: 12vh; }
-      .right-col { padding-top: 30vh; padding-bottom: 12vh; }
+      /* Phones: no pin, the cards would cover the heading. Everything flows top to bottom. */
+      #s2 { min-height: 0; overflow: clip; }
+      .s2-content { height: auto; padding: 16vh 24px 7vh; }
+      .s2-gallery { position: relative; height: auto; }
+      .folder-zone { position: relative; bottom: auto; height: auto; padding: 14vh 0 8vh; }
+      .s2-contact { position: relative; bottom: auto; height: auto; padding: 10vh 24px 14vh; }
+      .s2-foot { position: relative; }
 
-      /* Pinned text */
+      /* Gallery */
+      .gallery-cols { padding: 0 16px; gap: 14px; }
+      .gallery-col { gap: 22px; width: 50%; }
+      .gallery-card { max-width: 170px; border-radius: 12px; }
+      .card-label { font-size: 10px; padding: 28px 12px 12px; }
+      .left-col { padding-top: 0; padding-bottom: 0; }
+      .right-col { padding-top: 14vh; padding-bottom: 0; }
+
+      /* Heading */
       .s2-heading { font-size: clamp(32px, 9vw, 56px); letter-spacing: -2px; }
       .s2-sub { font-size: 11px; }
 
@@ -936,40 +946,62 @@ const leftColEl  = document.getElementById('left-col');
 const rightColEl = document.getElementById('right-col');
 const folderTrig = document.getElementById('folder-trigger');
 
-/* Pin center text while section scrolls */
-ScrollTrigger.create({
-  trigger: s2El, start: 'top top', end: 'bottom bottom',
-  pin: s2Content, pinSpacing: false,
+/* Mobile address bar showing/hiding resizes the viewport; don't recalc (and jump) on that */
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+const mm = gsap.matchMedia();
+
+/* Desktop: pinned heading, cards fly past it */
+mm.add('(min-width: 701px)', () => {
+  ScrollTrigger.create({
+    trigger: s2El, start: 'top top', end: 'bottom bottom',
+    pin: s2Content, pinSpacing: false,
+  });
+
+  /* Left column drifts up, right column drifts down */
+  gsap.fromTo(leftColEl, { y: 80 }, { y: -220, ease: 'none',
+    scrollTrigger: { trigger: s2El, start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.fromTo(rightColEl, { y: -60 }, { y: 220, ease: 'none',
+    scrollTrigger: { trigger: s2El, start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+
+  /* Fade pinned text in sync with folder zone entering viewport */
+  gsap.to(s2Content, { opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.folder-zone', start: 'top 85%', end: 'top 35%', scrub: 1 }
+  });
+
+  /* Gallery cards fade in on first enter */
+  ScrollTrigger.create({
+    trigger: s2El, start: 'top 80%', once: true,
+    onEnter() {
+      gsap.fromTo('.gallery-card',
+        { opacity:0, scale:.92 },
+        { opacity:1, scale:1, duration:.7, stagger:.15, ease:'power3.out', delay:.15 }
+      );
+      gsap.fromTo('.s2-content',
+        { opacity:0, y:22 },
+        { opacity:1, y:0, duration:.7, ease:'power3.out' }
+      );
+    }
+  });
 });
 
-/* Left column drifts up */
-gsap.fromTo(leftColEl, { y: 80 }, { y: -220, ease: 'none',
-  scrollTrigger: { trigger: s2El, start: 'top bottom', end: 'bottom top', scrub: 1 }
-});
+/* Phones: heading sits above the cards, light parallax, each card fades in as it arrives */
+mm.add('(max-width: 700px)', () => {
+  gsap.fromTo(s2Content, { opacity:0, y:22 }, { opacity:1, y:0, duration:.7, ease:'power3.out',
+    scrollTrigger: { trigger: s2Content, start: 'top 85%', once: true }
+  });
 
-/* Right column drifts down */
-gsap.fromTo(rightColEl, { y: -60 }, { y: 220, ease: 'none',
-  scrollTrigger: { trigger: s2El, start: 'top bottom', end: 'bottom top', scrub: 1 }
-});
+  gsap.fromTo(rightColEl, { y: 40 }, { y: -40, ease: 'none',
+    scrollTrigger: { trigger: '.gallery-cols', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
 
-/* Fade pinned text in sync with folder zone entering viewport */
-gsap.to(s2Content, { opacity: 0, ease: 'none',
-  scrollTrigger: { trigger: '.folder-zone', start: 'top 85%', end: 'top 35%', scrub: 1 }
-});
-
-/* Gallery cards fade in on first enter */
-ScrollTrigger.create({
-  trigger: s2El, start: 'top 80%', once: true,
-  onEnter() {
-    gsap.fromTo('.gallery-card',
-      { opacity:0, scale:.92 },
-      { opacity:1, scale:1, duration:.7, stagger:.15, ease:'power3.out', delay:.15 }
-    );
-    gsap.fromTo('.s2-content',
-      { opacity:0, y:22 },
-      { opacity:1, y:0, duration:.7, ease:'power3.out' }
-    );
-  }
+  gsap.set('.gallery-card', { opacity: 0, y: 40 });
+  ScrollTrigger.batch('.gallery-card', {
+    start: 'top 92%', once: true,
+    onEnter: els => gsap.to(els, { opacity: 1, y: 0, duration: .7, stagger: .1, ease: 'power3.out' })
+  });
 });
 
 /* Folder trigger appears when folder-zone scrolls into view */
