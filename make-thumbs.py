@@ -51,7 +51,7 @@ for entry in re.findall(r'\{[^{}]*\}', block):
 CARDS = {
     'GuessTheRide.png': (380, 0, 1123, 991),
     'Coffeenvite.jpg':  (0, 0, 780, 1040),
-    'Camber.jpg':       (574, 0, 1586, 1350),
+    'CamberMobile.jpg': (0, 0, 1170, 1560),
     'fornata.png':      (420, 0, 1020, 800),
 }
 for name, box in CARDS.items():
