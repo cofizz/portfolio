@@ -168,10 +168,11 @@
     /* ═══════════════════════════════════
        SECTION 2 · EXPLORATIONS
     ═══════════════════════════════════ */
+    /* Everything in #s2 is in normal flow (gallery, folder, contact, footer), so the
+       folder always lands below the last card whatever the screen height. */
     #s2 {
       position: relative; z-index: 2;
-      min-height: 340vh;
-      overflow: hidden;
+      overflow: clip;
     }
 
     /* Pinned center text */
@@ -211,7 +212,8 @@
 
     /* Parallax gallery */
     .s2-gallery {
-      position: absolute; top: 0; left: 0; right: 0; height: 100%;
+      /* pulled up over the pinned heading; bottom padding covers the right column's parallax drift (up to 220px down) */
+      position: relative; margin-top: -100vh; padding-bottom: 260px;
       pointer-events: none; z-index: 20;
     }
     .gallery-cols {
@@ -224,8 +226,8 @@
       display: flex; flex-direction: column;
       align-items: center; gap: 40px; width: 40%;
     }
-    .left-col { padding-top: 5vh; padding-bottom: 16vh; }
-    .right-col { padding-top: 36vh; padding-bottom: 16vh; }
+    .left-col { padding-top: 5vh; }
+    .right-col { padding-top: 36vh; }
 
     .gallery-card {
       width: 100%; max-width: 295px; aspect-ratio: 3/4;
@@ -267,7 +269,7 @@
 
     /* Folder zone */
     .folder-zone {
-      position: absolute; bottom: calc(48vh + 64px); left: 0; right: 0;
+      position: relative;
       height: 60vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center; z-index: 15;
@@ -457,7 +459,7 @@
 
     /* Contact CTA */
     .s2-contact {
-      position: absolute; bottom: 64px; left: 0; right: 0;
+      position: relative;
       height: 48vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center; z-index: 15; padding: 0 24px;
@@ -488,7 +490,7 @@
 
     /* Footer */
     .s2-foot {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 64px;
+      position: relative; height: 64px;
       display: grid; grid-template-columns: 1fr 1fr;
       align-items: center; padding: 0 48px;
       border-top: 1px solid rgba(232,232,236,.07); z-index: 30;
@@ -511,12 +513,10 @@
       .scroll-hint { padding: 10px 18px; font-size: 10px; }
 
       /* Phones: no pin, the cards would cover the heading. Everything flows top to bottom. */
-      #s2 { min-height: 0; overflow: clip; }
       .s2-content { height: auto; padding: 16vh 24px 7vh; }
-      .s2-gallery { position: relative; height: auto; }
-      .folder-zone { position: relative; bottom: auto; height: auto; padding: 14vh 0 8vh; }
-      .s2-contact { position: relative; bottom: auto; height: auto; padding: 10vh 24px 14vh; }
-      .s2-foot { position: relative; }
+      .s2-gallery { margin-top: 0; padding-bottom: 0; }
+      .folder-zone { height: auto; padding: 14vh 0 8vh; }
+      .s2-contact { height: auto; padding: 10vh 24px 14vh; }
 
       /* Gallery */
       .gallery-cols { padding: 0 16px; gap: 14px; }
